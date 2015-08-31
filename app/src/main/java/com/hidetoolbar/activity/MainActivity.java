@@ -67,13 +67,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void hide() {
         mToolbar.animate().translationY(-mToolbar.getHeight());//隐藏mToolbar的坐标为负
+        mToolbar.animate().alpha(0);
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams)mFabButton.getLayoutParams();
         mFabButton.animate().translationY(mFabButton.getHeight() + params.bottomMargin);//隐藏mFabButton的坐标为正
+        mFabButton.animate().alpha(0);
     }
 
     private void show() {
         mToolbar.animate().translationY(0);//恢复到原来的位置0
+        mToolbar.animate().alpha(1);
         mFabButton.animate().translationY(0);
+        mFabButton.animate().alpha(1);
     }
 
     private List<String> getList() {
