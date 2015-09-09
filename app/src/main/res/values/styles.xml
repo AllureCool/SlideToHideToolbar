@@ -11,4 +11,10 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="AppTheme.WhiteMenu" parent="AppTheme">
+        <item name="android:actionMenuTextColor">@android:color/white</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
 </resources>

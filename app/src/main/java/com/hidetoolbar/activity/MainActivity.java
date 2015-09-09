@@ -2,14 +2,22 @@ package com.hidetoolbar.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 
 import com.hidetoolbar.R;
+import com.hidetoolbar.adapter.DividerItemDecoration;
 import com.hidetoolbar.adapter.RecyclerAdapter;
 import com.hidetoolbar.mlistener.FabScrollListener;
 
@@ -24,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerAdapter mAdapter;
 
+    private ItemTouchHelper mItemTouchHelper;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,10 +44,31 @@ public class MainActivity extends AppCompatActivity {
         initView();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_add:
+                mAdapter.addItem(1);
+                mRecyclerView.scrollToPosition(0);
+                break;
+            case R.id.action_delete:
+                mAdapter.removeItem(1);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        setTitle("上下滑动显示隐藏toolbar");
+        setTitle("RecycleView");
     }
 
     private void findView() {
@@ -48,6 +80,10 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         mAdapter = new RecyclerAdapter(getList());
+        mItemTouchHelper = new ItemTouchHelper(mAdapter.mCallback);
+        mItemTouchHelper.attachToRecyclerView(mRecyclerView);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
         mRecyclerView.setAdapter(mAdapter);
         //监听滑动(上滑：出去，下滑：进来);
         mRecyclerView.addOnScrollListener(new FabScrollListener() {
@@ -61,6 +97,18 @@ public class MainActivity extends AppCompatActivity {
             public void onShow() {
                 //显示
                 show();
+            }
+        });
+
+        mAdapter.setOnItemClickListener(new RecyclerAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(MainActivity.this, "itemClick" + position, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                Toast.makeText(MainActivity.this, "itemLongClick" + position, Toast.LENGTH_SHORT).show();
             }
         });
     }

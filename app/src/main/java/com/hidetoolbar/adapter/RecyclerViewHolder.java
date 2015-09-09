@@ -24,4 +24,6 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder {
             mTextView.setText(text);
         }
     }
+
+
 }
